@@ -105,7 +105,7 @@ function validarEmail(e){
 }
 
 
-senha.addEventListener('focusout', validarSenha);
+senha.addEventListener('input', validarSenha);
 
 function validarSenha(e){
     const senhaTrimmado = e.target.value.trim();
@@ -119,14 +119,27 @@ function validarSenha(e){
     //      depois do @ ->letras e/ou numeros 
     //      depois do . -> net ou br ou org ou com
     // const regexEmail =/^[(\w\d\W)+]+@[(\w\d\W)+]+\.[(net|br|org|com)]+$/
-
+    const regexSenhaPequena = /^[0-9A-Za-z!@#$%^&*()_+{}\[\]:;<>,.?/~\-]{1,5}$/;
+    const regexSenhaMuitoGrande = /^[0-9A-Za-z!@#$%^&*()_+{}\[\]:;<>,.?/~\-]{21,}$/;
+    const regexSenhaForte = /^(?=(.*\d){2,})(?=(.*[A-Z]){2,})(?=.*[a-z])(?=(.*[!@#$%^&*()_+{}\[\]:;<>,.?/~]){2,})[0-9A-Za-z!@#$%^&*()_+{}\[\]:;<>,.?/~\-]{12,20}$/; // positive lookahead -> (?=) checa se o padrao seguinte esta contido na string sem consumir o caractere. no caso, ?=.*CHAR checa se o char CHAR aparece na string apos 0 ou X vezes o char . (qualquer caractere, representado por '.')
+    const regexSenhaModerada = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?/~])[0-9A-Za-z!@#$%^&*()_+{}\[\]:;<>,.?/~\-]{8,20}$/;  
+    const regexSenhaFraca = /^(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?/~])[0-9A-Za-z!@#$%^&*()_+{}\[\]:;<>,.?/~\-]{6,7}$/;  
 
     // fazer regex para: caso forte, caso medio, caso fraco, caso invalido
-
-    if (senhaTrimmado.match(regexEmail) == null) {
-        senhaHelp.textContent = "Formato de senha inválido";
-        senhaHelp.style.color="red";
+    if (senhaTrimmado.match(regexSenhaMuitoGrande) || senhaTrimmado.match(regexSenhaPequena)) {
+        senhaHelp.textContent = "Tamanho inválido. A senha deve conter de 6 a 20 caracteres, pelo menos um número e um caractere especial."
+        senhaHelp.style.color = "red";
+    } else if (senhaTrimmado.match(regexSenhaForte)) {
+        senhaHelp.textContent = "Senha forte.";
+        senhaHelp.style.color = "green";
+    } else if (senhaTrimmado.match(regexSenhaModerada)) {
+        senhaHelp.textContent = "Senha modearada";
+        senhaHelp.style.color="orange";
+    } else if (senhaTrimmado.match(regexSenhaFraca)) {
+        senhaHelp.textContent = "Senha fraca";
+        senhaHelp.style.color="yellow";
     } else { 
-        senhaHelp.textContent = ""
+        senhaHelp.textContent = "Senha inválida";
+        senhaHelp.style.color="red";
     }
 }
