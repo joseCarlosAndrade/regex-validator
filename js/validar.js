@@ -11,6 +11,16 @@ var emailHelp = document.querySelector("#inputEmailHelp");
 var senha = document.querySelector("#inputPassword");
 var senhaHelp = document.querySelector("#inputPasswordHelp");
 
+var inputResult = document.querySelector("#inputResult");
+var resultadoCadastro = "Seus dados não foram registrados";
+
+var results = [
+    false,
+    false,
+    false, 
+    false
+]
+
 // fonte : https://www.freecodecamp.org/news/regular-expressions-for-beginners/
 
 /*declarando o evento listener para o campos de texto do form. 
@@ -31,11 +41,13 @@ function validarNome(e){
 
     if(e.target.value.trim().match(regexNome)==null){
         //muda o conteúdo e o estilo do objeto nomeHelp que referencia o elemento html com id=inputNameHelp
-        nomeHelp.textContent = "Formato de nome inválido"; 
+        nomeHelp.textContent = "Nome inválido"; 
         nomeHelp.style.color="red";
+        results[0] = false;
     }
     else{
         nomeHelp.textContent = "";
+        results[0] = true;
     }       
 }
 
@@ -53,8 +65,9 @@ ano.addEventListener('focusout', () => {
 
     if(anoTrimado.match(regexAno)==null){
         //muda o conteúdo e o estilo do objeto nomeHelp que referencia o elemento html com id=inputYearHelp
-        anoHelp.textContent = "Formato de ano inválido";
+        anoHelp.textContent = "Ano inválido";
         anoHelp.style.color="red";
+        results[1] = false;
     }
     else{
         //objeto Date
@@ -64,16 +77,21 @@ ano.addEventListener('focusout', () => {
         
         if( parseInt(anoTrimado) > 2022 ){ // colocando limite de 2022
              //muda o conteúdo e o estilo do objeto nomeHelp que referencia o elemento html com id=inputYearHelp
-            anoHelp.textContent = `Ano inválido. O ano não pode ser maior que ${2022}.`;
+            // anoHelp.textContent = `Ano inválido. O ano não pode ser maior que ${2022}.`;
+            anoHelp.textContent = "Ano inválido";
             anoHelp.style.color="red";
+            results[1] = false;
         }
         else if( parseInt(anoTrimado) < 1900 ){ // colocando limite de 1900
              //muda o conteúdo e o estilo do objeto nomeHelp que referencia o elemento html com id=inputYearHelp
-            anoHelp.textContent = `Ano inválido. O ano não pode ser menor que ${1900}.`;
+            // anoHelp.textContent = `Ano inválido. O ano não pode ser menor que ${1900}.`;
+            anoHelp.textContent = "Ano inválido";
             anoHelp.style.color="red";
+            results[1] = false;
         }
         else{
             anoHelp.textContent="";
+            results[1] = true;
         }        
         
     }
@@ -99,8 +117,10 @@ function validarEmail(e){
     if (emailTrimmado.match(regexEmail) == null) {
         emailHelp.textContent = "Formato de email inválido";
         emailHelp.style.color="red";
+        results[2] = false;
     } else { 
         emailHelp.textContent = ""
+        results[2] = true;
     }
 }
 
@@ -129,17 +149,34 @@ function validarSenha(e){
     if (senhaTrimmado.match(regexSenhaMuitoGrande) || senhaTrimmado.match(regexSenhaPequena)) {
         senhaHelp.textContent = "Tamanho inválido. A senha deve conter de 6 a 20 caracteres, pelo menos um número e um caractere especial."
         senhaHelp.style.color = "red";
+        results[3] = false;
     } else if (senhaTrimmado.match(regexSenhaForte)) {
-        senhaHelp.textContent = "Senha forte.";
+        senhaHelp.textContent = "Senha Forte";
         senhaHelp.style.color = "green";
+        results[3] = true;
     } else if (senhaTrimmado.match(regexSenhaModerada)) {
-        senhaHelp.textContent = "Senha modearada";
+        senhaHelp.textContent = "Senha Modearada";
         senhaHelp.style.color="orange";
+        results[3] = true;
     } else if (senhaTrimmado.match(regexSenhaFraca)) {
-        senhaHelp.textContent = "Senha fraca";
+        senhaHelp.textContent = "Senha Fraca";
         senhaHelp.style.color="yellow";
+        results[3] = true;
     } else { 
         senhaHelp.textContent = "Senha inválida";
         senhaHelp.style.color="red";
+        results[3] = false;
     }
+}
+
+const verificarCadastro = () => {
+    const res = results.filter(v => v==true);
+    if (res.length === 4) {
+        resultadoCadastro = "Seus dados foram registrados"
+    }
+    console.log(res); 
+    console.log(results);  
+
+    inputResult.textContent = resultadoCadastro;
+
 }
